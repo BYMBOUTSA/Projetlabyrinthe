@@ -148,11 +148,8 @@ public:
      * Accède à la cellule de coordonnée "c"
     */
 	Cell &get_cell(const Coordinate &c);
-
 	const Cell &get_cell(const Coordinate &c) const;
 
-    //Cell &operator()(const Coordinate &c);
-	//const Cell &operator()(const Coordinate &c) const;
 
 	/**
  	 * Vérifie si toutes les cellules ont le meme identifiant "id"
@@ -166,6 +163,13 @@ public:
 	 * Modifie le labyrinthe actuel
 	*/
 	void fusion();
+
+
+  /**
+  * Met en place l'algorithme d’Aldous-Broder
+  *
+  */
+  void construire_aldous_broder();
 
 
     friend std::ostream &operator<<(std::ostream &f, const Labyrinth &l)
