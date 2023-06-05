@@ -138,8 +138,7 @@ void Labyrinth::fusion() {
   }
 }
 
-
-void Labyrinth::construire_aldous_broder() {
+/*void Labyrinth::construire_aldous_broder() {
     while (!is_fusion_finished()) {
         const Coordinate coord1 = {std::rand() % height, std::rand() % width};
         Coordinate coord2;
@@ -181,4 +180,66 @@ void Labyrinth::construire_aldous_broder() {
             }
         }
     }
+}*/
+
+void Labyrinth::construire_aldous_broder() {
+  // Sélectionne une cellule de départ aléatoirement
+  uint32_t random_start_y = 1 + rand() % (static_cast<int>(height) - 2);
+  uint32_t random_start_x = 1 + rand() % (static_cast<int>(width) - 2);
+
+  uint32_t current_y = (random_start_y / 2) * 2 + 1;
+  uint32_t current_x = (random_start_x / 2) * 2 + 1;
+
+  // Attribue un identifiant à la cellule de départ
+  get_cell({current_y, current_x}).set_id(0);
+  uint32_t total_cells = (height / 2) * (width / 2) - 1;
+
+  while (total_cells > 0) {
+    // Sélectionne une direction aléatoire (0 à 3)
+    uint32_t next_direction = rand() % 4;
+
+    // Calcule les coordonnées de la prochaine cellule dans la direction choisie
+    uint32_t next_y = current_y;
+    uint32_t next_x = current_x;
+
+    if (next_direction == 0) {
+      next_y -= 2;
+      if (next_y >= 1 && get_cell({next_y, current_x}).get_id() == -1) {
+        // La prochaine cellule est valide et non visitée
+        total_cells--;
+        remove_wall({next_y, current_x}, {next_y + 1, current_x});
+        get_cell({next_y, current_x})
+            .set_id(get_cell({current_y, current_x}).get_id());
+      }
+    } else if (next_direction == 1) {
+      next_y += 2;
+      if (next_y <= static_cast<uint32_t>(height) - 2 &&
+          get_cell({next_y, current_x}).get_id() == -1) {
+        total_cells--;
+        remove_wall({next_y, current_x}, {next_y - 1, current_x});
+        get_cell({next_y, current_x})
+            .set_id(get_cell({current_y, current_x}).get_id());
+      }
+    } else if (next_direction == 2) {
+      next_x -= 2;
+      if (next_x >= 1 && get_cell({current_y, next_x}).get_id() == -1) {
+        total_cells--;
+        remove_wall({current_y, next_x}, {current_y, next_x + 1});
+        get_cell({current_y, next_x})
+            .set_id(get_cell({current_y, current_x}).get_id());
+      }
+    } else if (next_direction == 3) {
+      next_x += 2;
+      if (next_x <= static_cast<uint32_t>(width) - 2 &&
+          get_cell({current_y, next_x}).get_id() == -1) {
+        total_cells--;
+        remove_wall({current_y, next_x}, {current_y, next_x - 1});
+        get_cell({current_y, next_x})
+            .set_id(get_cell({current_y, current_x}).get_id());
+      }
+    }
+
+    current_y = next_y;
+    current_x = next_x;
+  }
 }
