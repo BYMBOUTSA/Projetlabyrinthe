@@ -1,16 +1,30 @@
-all: main
+CC = g++             # le compilateur à utiliser
+GTKMM_CF = `pkg-config gtkmm-3.0 --cflags`
+GTKMM_LD = `pkg-config gtkmm-3.0 --libs`
+CFLAGS = $(GTKMM_CF) -Wall -pedantic # les options du compilateur
+LDFLAGS = $(GTKMM_LD)      # les options pour l'éditeur de liens
+SRC = main.cpp modele.cpp vue.cpp grille.cpp #controller.cpp# les fichiers sources
+PROG = main.out     # nom de l'exécutable
+OBJS =  $(SRC:.cpp=.o) # les .o qui en découlent
+.SUFFIXES: .cpp .o     # lien entre les suffixes
 
-CXX = clang++
-override CXXFLAGS += -g -Wno-everything
+all: $(PROG)
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
-HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
+# étapes de compilation et d'édition de liens
+# $@ la cible  $^ toutes les dépendances	
+$(PROG): $(OBJS)
+	$(CC)  -o $@ $^ $(LDFLAGS)
 
-main: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) $(SRCS) -o "$@"
 
-main-debug: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) -O0 $(SRCS) -o "$@"
+# le lien entre .o et .c
+# $< dernière dépendance	
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $<
 
+# pour faire propre
+.PHONY: clean
 clean:
-	rm -f main main-debug
+	rm -f *.o *~ core $(PROG)
+
+
+
