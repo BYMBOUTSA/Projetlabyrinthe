@@ -1,9 +1,9 @@
 CC = g++             # le compilateur à utiliser
-GTKMM_CF = #`pkg-config gtkmm-3.0 --cflags`
-GTKMM_LD = #`pkg-config gtkmm-3.0 --libs`
-CFLAGS = $(GTKMM_CF) -Wall # les options du compilateur
+GTKMM_CF = `pkg-config gtkmm-3.0 --cflags`
+GTKMM_LD = `pkg-config gtkmm-3.0 --libs`
+CFLAGS = $(GTKMM_CF) -Wall -pedantic # les options du compilateur
 LDFLAGS = $(GTKMM_LD)      # les options pour l'éditeur de liens
-SRC = main.cpp modele.cpp # les fichiers sources
+SRC = main.cpp modele.cpp vue.cpp #controller.cpp# les fichiers sources
 PROG = main.out     # nom de l'exécutable
 OBJS =  $(SRC:.cpp=.o) # les .o qui en découlent
 .SUFFIXES: .cpp .o     # lien entre les suffixes

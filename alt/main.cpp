@@ -1,32 +1,21 @@
+#include "controller.hpp"
 #include "modele.hpp"
+#include "vue.hpp"
+#include <gtkmm/application.h>
 #include <iostream>
+#include <map>
 
-int main() {
-  Cell c1({0, 0});
-  Cell c2({1, 0});
-  Cell c3({0, 1});
+int main(int argc, char **argv) {
+  std::srand(
+      std::time(nullptr)); // Initialise le générateur de nombres aléatoires
+                           // avec une graine basée sur l'horloge du système
 
-  std::cout << c1 << "\n";
-  c1.add_neighbour(c2);
-  c1.add_neighbour(c3);
+  auto app = Gtk::Application::create(
+      argc, argv); // Crée une instance de l'application Gtk
 
-  std::cout << c1 << "\n";
+  Controller c; // Crée une instance du contrôleur
 
-  Labyrinth l(3, 3);
-  std::cout << "==========\n" << l << "\n";
-  l.remove_wall({0, 0}, {0, 1});
-
-  std::cout << "\n" << l << "\n";
-  l.reset_wall();
-  std::cout << "\n" << l << "\n";
-
-  std::cout << "Lancement de l'algorithme fusion\n";
-  l.fusion();
-  std::cout << "Fusion terminée:\n" << l << '\n';
-
-  std::cout << "Lancement de l'algorithme d'Aldous-Broder\n";
-  l.construire_aldous_broder();
-  std::cout << "Aldous-Broder terminé:\n" << l << '\n';
-
-  return 0;
+  return app->run(c.get_vue()); // Lance l'exécution de l'application Gtk en
+                                // exécutant la méthode run() de l'application
+                                // sur l'objet Vue obtenu à partir du contrôleur
 }
